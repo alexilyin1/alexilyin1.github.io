@@ -7,30 +7,27 @@ url: "https://alexilyin1.github.io" # the base hostname & protocol for your site
 
 # Author Settings
 author:
-  name: Derrick Wells
-  image: '/assets/img/01.jpg'
-  job: Independent Product Designer
+  name: Alex Ilyin
+  image: '/assets/img/CG_Picture.jpg'
+  job: Data Analyst
   bio: Passionate designer curating designs for new startups  and  founders  and crafts  beautiful user interfaces with love.
-  email: forexample@website.com
+  email: alexailyin@gmail.com
 
 
 # Contact links
 contact:
-  - name: Twitter
-    link: https://twitter.com/
-  - name: Facebook
-    link: https://facebook.com/
-  - name: Instagram
-    link: https://instagram.com/
-
+  - name: Email
+    link: mailto:alexailyin@gmail.com
+  - name: LinkedIn
+    link: https://linkedin.com/alexander-ilyin1
+  - name: Github
+    link: https://github.com/alexilyin1
 
 # Comment Section (Disqus)
-disqus-identifier: mr-brown # add your shortname for Disqus Comment. For example mr-brown
-
+disqus-identifier: mr-brown 
 
 # Google Analytics
-google-analytics: # add your identifier. For example UA-99631805-1.
-
+google-analytics: 
 
 # Build settings
 markdown: kramdown
