@@ -1,15 +1,15 @@
 title: Alexander Ilyin - Data Analyst
-logo:  # you can add own logo.
+logo:  
 description: Data Analyst at the Connor Group in Santa Clara, CA. Experience with building analytics solutions as well as financial data integrations
-baseurl: "/" # the subpath of your site, e.g. /blog
-url: "https://alexilyin1.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/" 
+url: "https://alexilyin1.github.io" 
 
 
 # Author Settings
 author:
-  name: Alex Ilyin
+  name: Alexander Ilyin
   image: '/assets/img/CG_Picture.jpg'
-  job: Data Analyst
+  job: Data Analyst at the Connor Group 
   bio: Data Analyst at the Connor Group in Santa Clara, CA. Experience with building analytics solutions as well as financial data integrations 
   email: alexailyin@gmail.com
 
