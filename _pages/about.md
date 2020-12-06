@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /about/
-image: '/assets/img/CG_picture.jpg'
+image: '/assets/img/CG_Picture.jpg'
 ---
 
 Hi, my name is Alexander Ilyin. I’m currently working as a Data Analyst at the Connor Group in Santa Clara, CA. Before starting at the Connor Group, I completed my MS in Analytics at UC San Diego and my BS in Information Systems at UC Santa Cruz.
