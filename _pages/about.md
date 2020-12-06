@@ -10,3 +10,5 @@ Hi, my name is Alexander Ilyin. I’m currently working as a Data Analyst at the
 As a Data Analyst, I leverage my problem-solving ability and communication skills to provide valuable insights that drive growth. At the Connor Group, I work closely with our clients to assist them in building data pipelines to create an efficient flow of data between their affiliated payment service providers and their internal accounting software and data stores.
 
 In my free time, I enjoy various outdoors activities such as running, hiking and other sports such as boxing and tennis. I like to keep myself up to speed with the frequent changes in the world of analytics, both by reading journals and blogs, and also by working on unique projects to help expand my skill set. I am a firm believer in the saying “You never stop learning”.
+
+Please don't hesitate to reach out if you want to connect and collaborate. I'm always open to working on something exciting!
