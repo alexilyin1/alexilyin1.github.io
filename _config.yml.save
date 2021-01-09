@@ -1,30 +1,30 @@
 title: Alexander Ilyin - Data Analyst
-logo:  
-description: Data Analyst at the Connor Group in Santa Clara, CA. Experience with building analytics solutions as well as financial data integrations
-baseurl: "/" 
-url: "https://alexilyin1.github.io" 
+logo:  # you can add own logo.
+description: Passionate designer curating designs for new startups  and  founders  and crafts  beautiful user interfaces with love.
+baseurl: "/" # the subpath of your site, e.g. /blog
+url: "https://alexilyin1.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 
 # Author Settings
 author:
-  name: Alexander Ilyin
+  name: Alex Ilyin
   image: '/assets/img/CG_Picture.jpg'
-  job: Data Analyst at the Connor Group 
-  bio: Data Analyst at the Connor Group in Santa Clara, CA. Experience with building analytics solutions as well as financial data integrations 
-  email: alexi20@mailfence.com
+  job: Data Analyst at Connor Group 
+  bio: Data Analyst at the Connor Group in Santa Clara, CA. Experience building analytics solutions as well as financial data pipelines.
+  email: alexailyin@gmail.com
 
 
 # Contact links
 contact:
   - name: Email
-    link: mailto:alexi20@mailfence.com
+    link: mailto:alexailyin@gmail.com
   - name: LinkedIn
-    link: https://linkedin.com/in/alexander-ilyin1
+    link: https://linkedin.com/alexander-ilyin1
   - name: Github
     link: https://github.com/alexilyin1
 
 # Comment Section (Disqus)
-disqus-identifier: mr-brown
+disqus-identifier: mr-brown 
 
 # Google Analytics
 google-analytics: 
