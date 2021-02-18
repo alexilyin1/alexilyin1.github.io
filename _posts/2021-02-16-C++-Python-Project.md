@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Spotify Reccommender System Project Intro and Building a Custom Spotify API Library Using C++ and Pybind11"
+date:   2021-02-16 18:05:55 +0300
+image:  '/assets/img/recc_system.png'
+tags:   Blog
+---
 ## Introduction
 
 In this article, I will discuss the motivation behind building a custom reccommender system for Spotify song reccommendations, as well as a custom API wrapper library for the Spotify API. 
