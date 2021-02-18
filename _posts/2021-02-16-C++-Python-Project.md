@@ -4,9 +4,9 @@ In this article, I will discuss the motivation behind building a custom reccomme
 
 ## Background
 
-In the world of machine learning algorithms, reccommender systems are one of the most common algorithms in deployment. Many of us see the results of reccommender systems in our daily internet use - whether it is on Netflix, Youtube, or Facebook, these advanced algorithms are working behind the scenes to make sure that we stay on these platforms as long as possible. In most of these cases, reccommender systems are personalized and trained to your activity, and are ready to make reccommendations on the fly. In this way, you are able to constantly scroll through a particular apps "home page" and interact seemingly endless content related to your prior activity. With social media companies taking advantage of vast amounts of user data, they have almost perfected reccommender systems. In this project, I hoped to challenge Spotify's reccommender system. 
+In the world of machine learning algorithms, reccommender systems are one of the most common algorithms in deployment. Many of us see the results of reccommender systems in our daily internet use - whether it is on Netflix, Youtube, or Facebook, these advanced algorithms are working behind the scenes to make sure that we stay on these platforms as long as possible. In most of these cases, reccommender systems are personalized and trained to your activity and are ready to make reccommendations on the fly. In this way, you are able to constantly scroll through a particular apps "home page" and interact with seemingly endless content. With social media companies taking advantage of vast amounts of user data, they have almost perfected reccommender system. In this project, I hoped to challenge Spotify's reccommender system. 
 
-Back in November of 2020, I was in the process of building a new playlist on Spotify. One of Spotify's many amazing features is its reccommendation engine - while the algorithm itself has never been revealed for obvious reasons, one can safely assume that this reccommendation engine uses a mix of "Collaborative Filtering" and reccommendations based on song attributes to produce live reccommendations. In the world of reccommender systems, there are two widely used methods for reccommendations - Collaborative and Content-Based filtering. The difference between the two lies in the subset of data used for building reccommendations:Within the study of reccommender systems, the most widely accepted reccommender systems are built on the basis of "filtering" approaches. In more detail:
+Back in November of 2020, I was in the process of building a new playlist on Spotify. One of Spotify's many amazing features is its reccommendation engine - while the algorithm itself has never been revealed for obvious reasons, one can safely assume that this reccommendation engine uses a mix of "Collaborative Filtering" and reccommendations based on song attributes to produce live reccommendations. In the world of reccommender systems, there are two widely used methods for reccommendations - Collaborative and Content-Based filtering. In more detail:
 
 * Collaborative Filtering - Provides reccommendations based on the ratings and activities of networks of users, i.e. if all of your Spotify friends/followers listen to indie rock, there is a good chance you will be reccommended some of their favorite indie rock bands
 * Content-Based Filtering - Provides reccommendations based on the attributes of objects you are reccommending, i.e. you will receive reccommendations for songs with similar bass, tempo, melody, and other various audio features to the songs you currently listen to
@@ -17,7 +17,7 @@ _For more information on Spotify's reccommender system, check out these two Medi
 
 ## Project Planning 
 
-In terms of machine learning models, there is no doubt that reccommender systems require a significantly sized data set in order to improve the quality of reccommendations. If I hoped to build a competitive model, it would have to involve collecting a large amount of data, hopefuly not by hand. Fortunately, Spotify provides an API endpoint for collecting Spotify data. While planning the data collection phase of the project, an interesting thought came to mind - instead of using one of the many prebuilt libraries for interacting with the Spotify API, why not build a custom wrapper on top of that API and make it BETTER. And to make things more interesting - why not build that wrapper using C++? 
+There is no doubt that reccommender systems require a significantly sized data set in order to improve the quality of reccommendations. If I hoped to build a competitive model, it would have to involve collecting a large amount of data, hopefuly not by hand. Fortunately, Spotify provides an API endpoint for collecting Spotify data. While planning the data collection phase of the project, an interesting thought came to mind - instead of using one of the many prebuilt libraries for interacting with the Spotify API, why not build a custom wrapper on top of that API and make it BETTER. And to make things more interesting - why not build that wrapper using C++? 
 
 While C++ is not necessary a programming language that is used to interact with APIs, there is no doubt that using C++  could provide improvements in performance over other popular libraries. My language of choice for the reccommender system phase of the project would be Python, so to make interacting with my custom library easier, I would have to expose my C++ library to Python. As for linking Python and C++, I had two options: I could either by call the C++ library directly from Python, or I could create a Python package that calls the C++ library for me. The obvious downside with the first approach was that I would have to manually create a new C++ object in Python each time I wanted to use the C++ library. This seemed like an unneccessary step that would complicate the data collection process as a whole. Building a C++ library from scratch would add a significant amount of time to the project, but seemed like the logical approach in the long run. 
 
@@ -25,9 +25,10 @@ With the data collection medium decided, the project scope looked liked:
 
 1. Build and test a custom Python/C++ linked library
 2. Collect data that would be used to train a reccommender system
-3. Design and train an algorithm
-4. "Deploy" the algorithm and run experiments (I don't have the resources to run a full fledged experiment, my study would have to be based on friends and family)
-5. Publish official results
+3. Use a data warehousing solution to store the data
+4. Design and train an algorithm
+5. "Deploy" the algorithm and run experiments (I don't have the resources to run a full fledged experiment, my study would have to be based on friends and family)
+6. Publish official results
 
 ## Briefly on Technical Details of the Library 
 
@@ -39,5 +40,13 @@ _I found that [this](https://www.youtube.com/watch?v=-eIkUnCLMFc) tutorial was e
 
 ## Details of the Reccommender System
 
-As mentioned above, in the interest of trade secrets, Spotify has never formally revealed the 
+A great help through both stages of this project was [Spotify's API Web Reference](https://developer.spotify.com/documentation/web-api/reference/) - both for seeing which API endpoints I would have to adjust for in my wrapper, as well as choosing which fields I would use in my reccommender system. A big hurdle in the design of a new algorithm was the fact that Spotify does not support an endpoint for finding a user's followers. One can only assume that this endpoint is not supported so projects can not mimic Spotify's social network, as it doesn't make sense that Spotify engineers don't have the capability to create it.
 
+At first, the lack of an endpoint to get a user's followers seemed to write off the possibility of using collaborative filtering. However, I discovered a workaround that would allow me to create an arbitrary "social network" - playlists. By viewing a particular user's playlists, I could create a network amount the users which created the playlists they follow. Our network would look something like this:
+
+* 1st Degree Connections - Users who created the playlists the current user is following
+* 2nd Degree Connections - Similar logic to 1st Degree Connections, but for the User's who created those playlists
+
+In a sense, this mimics a social network similar to the one on LinkedIn. The intuitive base of this social network design is that, if I follow a certain playlist.. clearly the interests of the user who created that playlist are reflected in the songs they added. From that perspective, following a Playlist is like a "2nd Degree Follow" between two users. 
+
+Another addition to the design of the reccommender system would be song attributes. Fortunately, Spotify does support retrieving song attributes given a song ID, so no additional workaround such as possibly manually adding song attributes would be needed here.
