@@ -62,4 +62,4 @@ Another addition to the design of the recommender system would be song attribute
 
 ## Wrapping Up
 
-As of 2/16, this project is still in progress. I've made enough progress on my library to make a separate post detailing how I linked Python and C++ in a Python package. That post should be coming soon. Thank you for reading and I'm excited to share more details soon.
+As of 2/16, this project is still in progress. I've made enough progress on my library to make a separate post detailing how I linked Python and C++ in a Python package. That post should be coming soon. Thank you for reading and I'm excited to share more details soon. Check out my work so far [here](https://github.com/alexilyin1/CPPotify)
