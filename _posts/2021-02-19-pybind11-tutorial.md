@@ -9,15 +9,23 @@ tags:   Blog
 _As mentioned in my previous post, [this](https://www.youtube.com/watch?v=-eIkUnCLMFc) Youtube series was a massive help in getting started with Pybind11. My project structure is heavily based on the example from that series. The [Pybind11 documentation](https://pybind11.readthedocs.io/) is awesome and is another good place to start_
 
 # Contents
+
 - Pybind11 Tutorial
-  * [Introduction](#introduction)
-  * [Libraries Needed](#libraries-needed)
-    * [Pybind11](#pybind11)
-    * [Libcurl](#libcurl)
-  * [Pybind11 Project Structure](#pybind11-project-structure)
-  * [CMakeLists](#cmakelists)
-  * [Testing](#testing)
-  * [Conclusion](#conclusion)
+  * [Introduction](#introduction)
+  
+  * [Libraries Needed](#libraries-needed)
+  
+    * [Pybind11](#pybind11)
+  
+    * [Libcurl](#libcurl)
+  
+  * [Pybind11 Project Structure](#pybind11-project-structure)
+  
+  * [CMakeLists](#cmakelists)
+  
+  * [Testing](#testing)
+  
+  * [Conclusion](#conclusion)
 
 ## Introduction
 
