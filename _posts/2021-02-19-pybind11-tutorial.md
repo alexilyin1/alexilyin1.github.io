@@ -14,6 +14,7 @@ _As mentioned in my previous post, [this](https://www.youtube.com/watch?v=-eIkUn
     * [Pybind11](#pybind11)
     * [Libcurl](#libcurl)
   * [Pybind11 Project Structure](#pybind11-project-structure)
+  * [CMakeLists](#cmakelists)
 
 ## Introduction
 
@@ -61,8 +62,6 @@ This article will cover the technical details of my Spotify API wrapper library,
 
 ## Libraries Needed
 
-![Libcurl](/assets/img/pybind11_tutorial/curl.png)
-
 ### Pybind11
 
 As mentioned in my previous post, I hoped to build my reccommender system in Python. This meant that I would have to expose my newly built library to Python. I chose Pybind11 to do this, as between Pybind11 and Boost, Pybind11 is a lighter than Boost. 
@@ -81,6 +80,8 @@ After adding the library to a Git repo, we'll see that the submodule shows up li
 ![Submodule](/assets/img/pybind11_tutorial/git_submodule.png) 
 
 Adding Pybind11 to a C++ project is as simple as that. 
+
+![Libcurl](/assets/img/pybind11_tutorial/curl.png)
 
 ### Libcurl
 
@@ -112,3 +113,124 @@ in our CMakelists file. The first lines use the pybind11 "pybind11_add_module" C
 Once we have the curl library installed, we can begin setting up the Pybind11 project itself.
 
 ## Pybind11 Project Structure 
+
+[Git Repo](github.com/alexilyin1/CPPotify)
+
+As mentioned above, the structure of this project follows the structure presented in the video tutorial I linked. The overall structure looks like:
+
+```
++-- /externals
+|   +-- /pybind11
+|
++-- /source
+|   +-- /app
+|   +-- /module
+|   +-- /py
+|
+|   CMakeLists.txt
+```
+
+#### Breakdown of folders
+
+* externals - This folder will contain any submodules we add to our project, in this case Pybind11
+* source - This folder contains the source code for the project:
+    * app - Contains the main.cpp file
+    * module - Contains the code for the C++ module we will be linking to Python
+    * py - Contains the Python code that calls the C++ wrapper
+* cmake-build-debug - Files created when we compile the files 
+
+With this structure in mind, we can begin populating the necessary files. We'll add our 'main.cpp' into the 'app' folder. This file isn't necessarily important to building our library, but can be used for testing it in C++. 
+
+```
++-- /source
+|   +-- /app
+|       +--main.cpp
+|
+|   +-- /module
+|       +--CPPotify.cpp
+|       +--CPPotify.h
+|       +--authControl.cpp
+|       +--authControl.h
+|
+|   +-- /py
+|   
+```
+Into the module folder, we'll add two sets of header/source files - 'CPPotify.cpp' is the important file in this case - it actually uses Pybind11 to create a 'module'. Here is the relevant code:
+
+```
+#include <pybind11/pybind11.h>
+
+namespace py = pybind11;
+```
+
+In this code snippet, we include the pybind11.h header file and declare a 'py' namespace that will hold the necessary pybind11 functions. 
+
+After writing the class and functions we want to expose to Python, we need to formally declare them as a Pybind11 module:
+
+```
+PYBIND11_MODULE(pybind11module, cpp) {
+    cpp.doc() = "CPPotify Module - Python Spotify API using C++";
+    py::class_<CPPotify>(cpp, "CPPotify")
+            .def(py::init<std::string, std::string>())
+            ... _Rest of your functions_ ...
+            .def("getToken", &CPPotify::getToken);
+};
+```
+
+Here is where naming convention comes into play - we want to make remember the name we pass into the first argument of the PYBIND11_MODULE function call, as it must match the name we use in our CMakeLists.txt file.
+
+After you've added the class functions you want your users to be able to call from Python, we can begin populating the CMakeLists.txt file, which will tie our project together. 
+
+## CMakeLists
+
+Before starting to write any actual CMake functions, we can set some filepath variables to reduce repetitive filepath copy/pasting:
+
+```
+project("pybind11module_CPPotify")
+
+set(APP_SOURCE "${PROJECT_SOURCE_DIR}/source/app")
+set(MODULE_SOURCE "${PROJECT_SOURCE_DIR}/source/module")
+set(EXTERNALS "${PROJECT_SOURCE_DIR}/externals")
+```
+
+(${PROJECT_SOURCE_DIR} is created automatically once you create a project, no need to define it)
+
+We can start with creating a target library for our Pybind11 module. Instead of using the 'add_library' function, we'll use the 'pybind11_add_module' function which is quite literally a wrapper for the former:
+
+```
+pybind11_add_module (
+    pybind11module 
+    ${MODULE_SOURCE}/CPPotify.cpp
+    ${MODULE_SOURCE}/authControl.cpp
+)
+```
+
+WARNING - The first argument to that function must match the name we used to create the Pybind11 module in our C++ function.
+
+Now that we have a target library, we can use the 'target_link_libraries' function to link the external libraries we are using, in this case libcurl
+
+```
+target_link_libraries(
+    pybind11module
+    PRIVATE curl
+    PRIVATE nlohmann_json::nlohmann_json
+)
+```
+
+WARNING - If you don't include PRIVATE before the libraries you are using, you will get the following error
+
+```
+[cmake] CMake Error at CMakeLists.txt:21 (target_link_libraries):
+[cmake]   The keyword signature for target_link_libraries has already been used with
+[cmake]   the target "pybind11module".  All uses of target_link_libraries with a
+[cmake]   target must be either all-keyword or all-plain.
+[cmake] 
+[cmake]   The uses of the keyword signature are here:
+[cmake] 
+[cmake]    * externals/pybind11-2.6.1/tools/pybind11Tools.cmake:153 (target_link_libraries)
+[cmake]    * externals/pybind11-2.6.1/tools/pybind11Tools.cmake:180 (target_link_libraries)
+```
+
+That keyword before the library tells us what kind of dependency our shared library will have with that external library - if the dependency is PRIVATE, that means we are including headers in our source files but NOT our header files - this is the case for this shared library. I found [this](https://stackoverflow.com/questions/26037954/cmake-target-link-libraries-interface-dependencies) SO post helpful in understand this. 
+
+
