@@ -32,7 +32,7 @@ With the data collection medium decided, the project scope looked liked:
 
 1. Build and test a custom Python/C++ linked library
 2. Collect data that would be used to train a recommender system
-3. Use a data warehousing solution like Snowflake to efficiently store the data
+3. Use a data warehousing solution like AWS to efficiently store the data
 4. Design and train an algorithm
 5. "Deploy" the algorithm and run experiments (I don't have the resources to run a full fledged experiment, my study would have to be based on friends and family)
 6. Publish official results on this blog
@@ -66,7 +66,7 @@ At this point, my plan for data collection looked something like:
 2. Use other endpoints to view albums/playlists/artists related to the original list from Step 1, and expand the original list
 3. Once a large set of albums/playlists/artists is selected, expand from within the list i.e. get albums/artists from playlists
 4. Extract all the songs from objects collected in the 3 steps above
-5. Use the Snowflake Python connecter to store the data in a Snowflake instance
+5. Use the AWS Python connecter to store the data in a AWS Redshift instance
 
 ## Wrapping Up
 
