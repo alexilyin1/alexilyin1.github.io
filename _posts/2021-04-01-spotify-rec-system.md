@@ -5,6 +5,7 @@ date:   2021-04-31 18:05:55 +0300
 image:  '/assets/img/spotify_rec_system/spotify-icon.jpg'
 tags:   Blog
 ---
+
 # Contents
 
 - Spotify Recommender System
