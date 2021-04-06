@@ -3,7 +3,7 @@
 .post {
   margin-top: 80px;
   margin-bottom: 80px;
-  @media (max-width: $mobile) {
+  @media (max-width: $desktop) {
     margin-top: 50px;
     margin-bottom: 50px;
   }
@@ -54,8 +54,6 @@
   ol li {
     margin-bottom: 15px;
   }    
-  margin-right: 100px;
-  width: 1000px;
 }
 
 /* Post Navigation */
