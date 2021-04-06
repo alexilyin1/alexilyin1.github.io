@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Using my Spotify API Library to Build a Spotify Recommender System"
-date:   2021-04-31 18:05:55 +0300
+date:   2021-04-04 18:05:55 +0300
 image:  '/assets/img/spotify_rec_system/spotify-icon.jpg'
 tags:   Blog
 ---
@@ -60,7 +60,7 @@ This section will discuss the 'Collaborative' filtering approach (with modificat
 
 In order to attempt to improve on Spotify's current recommendations, I decided to build out an algorithm that would be a mix of Collaborative and Contest-Based filtering.
 
-![Spotify Follow Friends](/assets/img/follow-friends-on-spotify.jpg)
+![Spotify Follow Friends](/assets/img/spotify_rec_system/follow-friends-on-spotify.jpg)
 
 While Spotify does provide a feature to follow your friends, the Spotify _does not_ provide an API endpoint for accessing your followers. To mimic a network of friends and followers, I used the [Playlists]([https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists](https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists)) endpoint to get all of the current user's (my) playlists. From this list of playlists, I would keep only playlists that were not created by the current user, and grab the tracks from the remaining playlists. In this way, I would have a set of tracks that users that I follow listen to. This handles the 'collaborative' filtering aspect of my algorithm.
 
