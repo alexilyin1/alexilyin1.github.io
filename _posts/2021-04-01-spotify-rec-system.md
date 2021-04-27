@@ -12,7 +12,7 @@ tags:   Blog
 
   * [Introduction](#introduction)
   
-  * [Creating a Dataset of Spotify Songs](#creating-a-dataset-of-spotify-songs)
+  * [Creating a Dataset of Spotify tracks](#creating-a-dataset-of-spotify-tracks)
   
   * [Defining a Custom Recommender Algorithm](#defining-a-custom-recommender-algorithm)
   
@@ -27,7 +27,7 @@ tags:   Blog
 
 In this post I'll be wrapping up my "series" on my Spotify recommender system and Python/C++ shared library. To conclude the project, I'm going to talk through the thinking behind the recommender system that I've built, as well as the results. While the goal of this phase of the project was to create a model that could be deployed and used in real time, I wasn't able to achieve this result with the dataset that I had retrieved using the API. However, I can say that I am happy with the results of the model themselves. More on that later.
 
-## Creating a Dataset of Spotify Songs 
+## Creating a Dataset of Spotify tracks 
 
 While datasets of Spotify tracks and audio features exist on sites such as [Kaggle]([https://www.kaggle.com/yamaerenay/spotify-dataset-19212020-160k-tracks](https://www.kaggle.com/yamaerenay/spotify-dataset-19212020-160k-tracks)), my motivation for building a Spotify API wrapper was to 'mine' Spotify data myself. In order to make the wrapper development process pay off, I aimed to build a dataset larger than the one available on Kaggle. 
 
@@ -64,11 +64,11 @@ In order to attempt to improve on Spotify's current recommendations, I decided t
 
 While Spotify does provide a feature to follow your friends, the Spotify _does not_ provide an API endpoint for accessing your followers. To mimic a network of friends and followers, I used the [Playlists]([https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists](https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists)) endpoint to get all of the current user's (my) playlists. From this list of playlists, I would keep only playlists that were not created by the current user, and grab the tracks from the remaining playlists. In this way, I would have a set of tracks that users that I follow listen to. This handles the 'collaborative' filtering aspect of my algorithm.
 
-The next step is finding the audio features of each track in the remaining set, and comparing it with the audio features of the track the that user is currently listening to. In order to reduce compilation times and make sure that comparisons are only happening against relevant tracks, the set of tracks that remain is filtered for songs that have genres related to the genres of the current track. 
+The next step is finding the audio features of each track in the remaining set, and comparing it with the audio features of the track the that user is currently listening to. In order to reduce compilation times and make sure that comparisons are only happening against relevant tracks, the set of tracks that remain is filtered for tracks that have genres related to the genres of the current track. 
 
 ![Jaccard Distance Formula](/assets/img/spotify_rec_system/jacc_sim.png)
 
-Initially, I thought that I would be able to complete a simple comparison of song genres by directly comparing them. However, upon examination of some Spotify genres, I realized that this would not work. It turns out that Spotify genres can be extremely specific:
+Initially, I thought that I would be able to complete a simple comparison of track genres by directly comparing them. However, upon examination of some Spotify genres, I realized that this would not work. It turns out that Spotify genres can be extremely specific:
 ```
 [portland hip hop]
 ```
@@ -100,13 +100,13 @@ After taking the union of set of genres above, the new Jaccard Distance would be
 
 Back to our new dataset of tracks from our followed playlists: once we apply Jaccard Distance to the current track's genres and the rest of the tracks, we can filter out tracks that are not similar. Since the goal is to reduce compilation times while also keeping only tracks that are similar, I had to choose a similarity threshold for filtering the dataset. After trial and error, I decided to use the threshold 0.4 - I found that any value below 0.4 returned tracks/genres that were not as similar as needed. Additionally, when filtering for distance less than 0.4, the dataset reached a length at which compilation times would not be optimal (at this point I was still aiming to create a recommender algorithm that could be run in real time). 
 
-After obtaining the final set of tracks, the next step would be to obtain the audio features for each song in the remaining set. This is where the dataset I collected in the previous set would come into play - if a song is already in our dataset, not additional computation is needed, as we can simply take the audio features we previously obtained. However, if the track is not in our ~200k track dataset, we will have to take the time to call the 'Audio Features' Spotify API endpoint to obtain audio features for that track.
+After obtaining the final set of tracks, the next step would be to obtain the audio features for each track in the remaining set. This is where the dataset I collected in the previous set would come into play - if a track is already in our dataset, not additional computation is needed, as we can simply take the audio features we previously obtained. However, if the track is not in our ~200k track dataset, we will have to take the time to call the 'Audio Features' Spotify API endpoint to obtain audio features for that track.
 
 #### Algorithm Definition TLDR
 
 The set of steps mentioned above can be summarized as:
 
-1. Start with the song the user is currently listening to
+1. Start with the track the user is currently listening to
 2. For this particular user, obtain a complete list of their playlists - playlists they created and playlists they follow
 3. For the set of playlists that they follow, create a set of tracks contained in those playlists
 4. For each track in the playlist, take the Jaccard Distance between the genres of the current track, and each track's genres in the set above
@@ -128,7 +128,7 @@ In such a case, we can assume that Jaccard Distance or other similarity metrics 
 
 This section will cover the 'Content-based' filtering section of my algorithm. I'll be walking through the Python code chunks I wrote (some parts of the algorithm were covered in the previous section). 
 
-Here are the three functions used to produce a set of recommended songs ([Github link]([https://github.com/alexilyin1/SpotifyRecSystem/tree/master/rec_system](https://github.com/alexilyin1/SpotifyRecSystem/tree/master/rec_system))).
+Here are the three functions used to produce a set of recommended tracks ([Github link]([https://github.com/alexilyin1/SpotifyRecSystem/tree/master/rec_system](https://github.com/alexilyin1/SpotifyRecSystem/tree/master/rec_system))).
 
 ```python
 # List Union Function - For a list of lists, return the union of all the lists 
@@ -281,9 +281,9 @@ Now that we've defined our functions, lets test some output to see if it matches
 
 To test the results of the algorithm, I'll pick two random tracks from my ~200k track dataset
 
-### Song 1  - Madonna by Drake 
+### Track 1  - Madonna by Drake 
 
-Using this first song, the first 20 recommendations sorted by Jaccard Distance and Cosine Similarity looked like:
+Using this first track, the first 20 recommendations sorted by Jaccard Distance and Cosine Similarity looked like:
 
 ```
 'Bad Boy (with Young Thug)',
@@ -306,11 +306,11 @@ Using this first song, the first 20 recommendations sorted by Jaccard Distance a
 'pick up the phone'
 ```
 
-Based on knowledge about the original artist (Drake) and the genre of the original track (rap/hip-hop) we can say that the first half of our recommender system worked (selecting similar songs). After listening to the songs in the above list, most have the same tempo and a similar beat. This tells us that a person that is listening to the original track is at least being recommended similar songs. Lets try to drive this point home with an additional example.
+Based on knowledge about the original artist (Drake) and the genre of the original track (rap/hip-hop) we can say that the first half of our recommender system worked (selecting similar tracks). After listening to the tracks in the above list, most have the same tempo and a similar beat. This tells us that a person that is listening to the original track is at least being recommended similar tracks. Lets try to drive this point home with an additional example.
 
-### Song 2 - 'Piano Concerto No. 2 in C Minor, Op. 18: I. Moderato' - Sergei Rachmaninoff - performed by Khatia Buniatishvili
+### Track 2 - 'Piano Concerto No. 2 in C Minor, Op. 18: I. Moderato' - Sergei Rachmaninoff - performed by Khatia Buniatishvili
 
-Here are the recommended songs from this track:
+Here are the recommended tracks from this track:
 
 ```
 ['Mandolin Concerto in C Major, RV 425: II. Largo', 'Bela Banfalvi'],
@@ -401,7 +401,7 @@ Here are the recommended songs from this track:
 
 Based on the examples above, it seems that the recommender algorithm I built accomplishes its task - providing recommend
 
-One issue with this particular recommender system is that it largely depends on the kind of playlists you follow. If the song variety of your playlists is lacking (i.e. you follow a lot of rap/hip-hop related playlists) and you are listening to songs from a different genre, it is quite likely the algorithm will not return any recommendations, simply because it will not find songs from that genre. 
+One issue with this particular recommender system is that it largely depends on the kind of playlists you follow. If the track variety of your playlists is lacking (i.e. you follow a lot of rap/hip-hop related playlists) and you are listening to tracks from a different genre, it is quite likely the algorithm will not return any recommendations, simply because it will not find tracks from that genre. 
 
 With two main goals to this project (1. Create a track recommender system 2. Create an algorithm that could work in real time), at this point I can only say I accomplished #1. With the algorithm taking around 10 minutes to produce a result, deploying in real-time would not produce acceptable results for end users. That being said, possible improvements include:
 
